@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:id="@+id/laye1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Operation"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true" />
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/op"
+            android:gravity="right"
+            android:textColor="@color/textColorPrimary"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/textView2"
+            android:layout_toEndOf="@+id/textView2" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:id="@+id/laye2"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Communication method"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true" />
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cmnctn"
+            android:gravity="right"
+            android:textColor="@color/textColorPrimary"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/textView2"
+            android:layout_toEndOf="@+id/textView2" />
+
+
+    </LinearLayout>
+
+
+
+    <EditText
+        android:layout_marginTop="10dp"
+        android:id="@+id/et1"
+        android:gravity="center"
+        android:background="@drawable/editbox"
+        android:layout_width="match_parent"
+        android:hint="Mount Point Name"
+        android:layout_height="40dp">
+
+    </EditText>
+
+    <EditText
+        android:layout_marginTop="10dp"
+        android:id="@+id/et2"
+        android:gravity="center"
+        android:background="@drawable/editbox"
+        android:layout_width="match_parent"
+        android:hint="Password"
+        android:layout_height="40dp">
+
+    </EditText>
+
+    <EditText
+        android:layout_marginTop="10dp"
+        android:id="@+id/et3"
+        android:gravity="center"
+        android:background="@drawable/editbox"
+        android:layout_width="match_parent"
+        android:hint="IP"
+        android:layout_height="40dp">
+
+    </EditText>
+
+    <EditText
+        android:layout_marginTop="10dp"
+        android:id="@+id/et4"
+        android:gravity="center"
+        android:background="@drawable/editbox"
+        android:layout_width="match_parent"
+        android:hint="Port"
+        android:layout_height="40dp">
+
+    </EditText>
+
+    <Button
+        android:layout_marginTop="50dp"
+        android:id="@+id/timebt"
+        android:text="done"
+        android:layout_width="match_parent"
+        android:background="@drawable/rounbutton"
+        android:layout_height="wrap_content"></Button>
+
+</LinearLayout>

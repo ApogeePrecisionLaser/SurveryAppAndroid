@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <resources>
+
+
+     <color name="colorPrimary">#CD9E2C25</color>
+     <color name="colorPrimary1">#9A9B1E16</color>
+     <color name="colorPrimaryDark">#802E02</color>
+     <color name="colorAccent">#D81B60</color>
+     <color name="colorWhite">#FFFFFF</color>
+     <color name="coloret">#FF9691</color>
+     <color name="textColorPrimary">#000000</color>
+     <color name="white">#ffffff</color>
+     <color name="btn_logut_bg">#ff6861</color>
+     <color name="colorblue">#C13F51B5</color>
+     <color name="coloryellow">#D7DBC626</color>
+    <color name="color_bluedark">#320398</color>
+
+    <color name="tab_disable">#979797</color>
+    <color name="tab_enable">#FFFFFF</color>
+    <color name="tab_checked">#F3CD70</color>
+    <color name="tab_unchecked">#FFFFFF</color>
+
+  </resources>

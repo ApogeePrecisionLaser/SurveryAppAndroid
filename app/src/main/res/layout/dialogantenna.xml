@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_marginTop="0dp"
+        android:id="@+id/nm"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:hint="Name"
+        android:background="@drawable/editbox"
+        android:layout_height="40dp">
+
+    </EditText>
+
+    <EditText
+        android:layout_marginTop="50dp"
+        android:id="@+id/rds"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:hint="Radius"
+        android:background="@drawable/editbox"
+        android:layout_height="40dp">
+
+    </EditText>
+
+    <EditText
+        android:layout_marginTop="50dp"
+        android:id="@+id/mdl"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:hint="middle"
+        android:background="@drawable/editbox"
+        android:layout_height="40dp">
+
+    </EditText>
+
+    <EditText
+        android:layout_marginTop="50dp"
+        android:id="@+id/btm"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:hint="Bottom"
+        android:background="@drawable/editbox"
+        android:layout_height="40dp">
+
+    </EditText>
+
+    <ImageView
+        android:id="@+id/imgv"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/antnaview"
+        android:layout_width="match_parent"
+        android:layout_height="250dp">
+
+    </ImageView>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+     <Button
+        android:id="@+id/antnabtn"
+        android:text="done"
+         android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+         android:background="@drawable/rounbutton"
+        android:layout_height="wrap_content"></Button>
+    </LinearLayout>
+
+</LinearLayout>
