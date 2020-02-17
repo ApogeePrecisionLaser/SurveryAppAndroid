@@ -11,10 +11,10 @@ import com.apogee.fleetsurvey.model.Operation;
 
 import java.util.ArrayList;
 
-public class SpinnerAdapter extends ArrayAdapter {
+public class CustomSpinnerAdapter extends ArrayAdapter {
 
     ArrayList<Operation> operationArrayList;
-    public SpinnerAdapter(@NonNull Context context, int resource, ArrayList<Operation> operationArrayList) {
+    public CustomSpinnerAdapter(@NonNull Context context, int resource, ArrayList<Operation> operationArrayList) {
         super(context, resource);
         this.operationArrayList = operationArrayList;
     }
