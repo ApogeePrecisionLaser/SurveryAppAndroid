@@ -2,25 +2,31 @@ package com.apogee.fleetsurvey.Data;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.apogee.fleetsurvey.Connect;
+import com.apogee.fleetsurvey.Fragments.OperationListFragment;
 import com.apogee.fleetsurvey.R;
 import com.apogee.fleetsurvey.model.BleModel;
+import com.apogee.fleetsurvey.scanmodule.ScanActivity;
 import com.apogee.fleetsurvey.utility.BLEService;
 
 import dmax.dialog.SpotsDialog;
@@ -36,6 +42,7 @@ import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class SplashActivity extends Activity {
+
     public static final int RequestPermissionCode = 7;
     Button btn;
     long result1;
@@ -47,7 +54,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spalsh);
         spotsDialog = new SpotsDialog.Builder().setContext(this).build();
-      //  spotsDialog.show();
+        //  spotsDialog.show();
         btn = (Button) findViewById(R.id.btn_letstart);
         final BleModel model = new BleModel(SplashActivity.this);
 
@@ -60,7 +67,7 @@ public class SplashActivity extends Activity {
 //        });
 
         Intent intentService = new Intent(SplashActivity.this, BLEService.class);
-        resultReceiver=new MyResultReceiver(new Handler());
+        resultReceiver = new MyResultReceiver(new Handler());
         intentService.putExtra("receiver", resultReceiver);
         startService(intentService);
 //        ActionBar actionBar = getSupportActionBar();
@@ -76,9 +83,7 @@ public class SplashActivity extends Activity {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(SplashActivity.this, Connect.class);
-                startActivity(i);
-                finish();
+                showDialog();
             }
         });
 
@@ -192,7 +197,6 @@ public class SplashActivity extends Activity {
     }
 
 
-
     private class MyResultReceiver extends ResultReceiver {
 
         /**
@@ -223,4 +227,47 @@ public class SplashActivity extends Activity {
 //            }
 //        });
 //    }
+
+    void showDialog() {
+        final Dialog dialog = new Dialog(SplashActivity.this);
+        dialog.setCancelable(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_connect);
+        ImageView iv_createnew = dialog.findViewById(R.id.iv_createanew);
+        iv_createnew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SplashActivity.this, Connect.class);
+                intent.putExtra(Connect.FRAGMENTREFERENCE, 1);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        ImageView iv_chooseoption = dialog.findViewById(R.id.iv_chooseoption);
+        iv_chooseoption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(SplashActivity.this, Connect.class);
+                intent.putExtra(Connect.FRAGMENTREFERENCE, 2);
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+
+        ImageView iv_bydeviceId = dialog.findViewById(R.id.iv_bydeviceId);
+        iv_bydeviceId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(SplashActivity.this, ScanActivity.class);
+
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+
+
+        dialog.show();
+    }
 }

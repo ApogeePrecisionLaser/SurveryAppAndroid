@@ -1,25 +1,23 @@
 package com.apogee.fleetsurvey;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.Nullable;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
+import androidx.annotation.Nullable;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+
+import com.apogee.fleetsurvey.Database.DatabaseOperation;
 import com.apogee.fleetsurvey.Database.DatabaseWrapper;
-import com.apogee.fleetsurvey.utility.MODBUSCRC16;
-import com.apogee.fleetsurvey.utility.MyInternetConnection;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -36,55 +34,84 @@ public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() {
         // Context of the app under test.
+      //String str =  String.format("%040x", new BigInteger(1, "01".getBytes(/*YOUR_CHARSET?*/)));
+      String str =  Integer.toHexString('2');
 
-        Map<String, Map<String, String>> selectionList = new HashMap<>();
+        String jsonexample = "{\n" +
+                "  \"id\": 123,\n" +
+                "  \"name\": \"Pankaj\",\n" +
+                "  \"permanent\": true,\n" +
+                "  \"address\": {\n" +
+                "    \"street\": \"Albany Dr\",\n" +
+                "    \"city\": \"San Jose\",\n" +
+                "    \"zipcode\": 95129\n" +
+                "  },\n" +
+                "  \"phoneNumbers\": [\n" +
+                "    123456,\n" +
+                "    987654\n" +
+                "  ],\n" +
+                "  \"role\": \"Manager\",\n" +
+                "  \"cities\": [\n" +
+                "    \"Los Angeles\",\n" +
+                "    \"New York\"\n" +
+                "  ],\n" +
+                "  \"properties\": {\n" +
+                "    \"age\": \"29 years\",\n" +
+                "    \"salary\": \"1000 USD\"\n" +
+                "  }\n" +
+                "}";
 
-        dbHelper = new DatabaseWrapper(MyInternetConnection.getInstance());
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        database = dbHelper.getReadableDatabase();
+        try {
+            Employee employee = objectMapper.readValue(jsonexample, Employee.class);
 
-        getoperation(23);
-//        getoperation(38);
-        Context appContext = InstrumentationRegistry.getTargetContext();
-        int i = 1;
-        int[] index = new int[3];
-
-        HashMap<String, String> stringStringHashMap = new HashMap<>();
-
-        stringStringHashMap.put("SET_DEVICE_ID", "01");
-        stringStringHashMap.put("LIQUID_TYPE", "00 01");
-
-        String command = "0106001600/SET_DEVICE_ID/CRC/";
-        // String command = "/SET_DEVICE_ID/060012/LIQUID_TYPE/CRC/";
-
-
-        String splitstr[] = command.split("/");
-        String final_command = "";
-        for (int j = 0; j < splitstr.length; j++) {
-
-            if (stringStringHashMap.containsKey(splitstr[j])) {
-                splitstr[j] = stringStringHashMap.get(splitstr[j]);
-
-            }
-
-            final_command = final_command.concat(splitstr[j]);
-
-            if (final_command.contains("CRC")) {
-                final_command = final_command.replace("CRC", new MODBUSCRC16().returnCRCHexstring((final_command.substring(0, final_command.indexOf("CRC")).replaceAll("\\s+", ""))));
-            }
+            System.out.println("Employee Object\n"+employee);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
 
-        System.out.println(final_command);
+//        Map<String, Map<String, String>> selectionList = new HashMap<>();
+//
+//        dbHelper = new DatabaseWrapper(MyInternetConnection.getInstance());
+//
+//        database = dbHelper.getReadableDatabase();
+//
+//        getoperation(23);
+////        getoperation(38);
+//        Context appContext = InstrumentationRegistry.getTargetContext();
+//        int i = 1;
+//        int[] index = new int[3];
+//
+//        HashMap<String, String> stringStringHashMap = new HashMap<>();
+//
+//        stringStringHashMap.put("SET_DEVICE_ID", "01");
+//        stringStringHashMap.put("LIQUID_TYPE", "00 01");
+//
+//        String command = "0106001600/SET_DEVICE_ID/CRC/";
+//        // String command = "/SET_DEVICE_ID/060012/LIQUID_TYPE/CRC/";
+//
+//
+//        String splitstr[] = command.split("/");
+//        String final_command = "";
+//        for (int j = 0; j < splitstr.length; j++) {
+//
+//            if (stringStringHashMap.containsKey(splitstr[j])) {
+//                splitstr[j] = stringStringHashMap.get(splitstr[j]);
+//
+//            }
+//
+//            final_command = final_command.concat(splitstr[j]);
+//
+//            if (final_command.contains("CRC")) {
+//                final_command = final_command.replace("CRC", new MODBUSCRC16().returnCRCHexstring((final_command.substring(0, final_command.indexOf("CRC")).replaceAll("\\s+", ""))));
+//            }
+//        }
+//
+//
+//        System.out.println(final_command);
 
-//        String command="0102";
-//
-//        String getvalues[]= command.split("(?!^)");
-//        assertEquals("com.example.surveydemo", appContext.getPackageName());
-//
-//        String input = "0x17F8";
-//        Integer crcRes = crc16(input.getBytes());
-//        System.out.println("Calculated CRC-CCITT: 0x" + Integer.toHexString(crcRes));
 
     }
 
@@ -155,12 +182,11 @@ public class ExampleInstrumentedTest {
         namesListparent.add(0, new Operation(-15, "--select--", null));
 
 
-        for(int postion=0;postion<namesListparent.size();postion++)
-        {
+        for (int postion = 0; postion < namesListparent.size(); postion++) {
 
             Operation operation = namesListparent.get(postion);
 
-            if(operation.getId()>0){
+            if (operation.getId() > 0) {
                 Cursor cursor = isChild(operation.getId());
                 setchild.clear();
                 for (int i = 0; i < cursor.getCount(); i++) {
@@ -192,7 +218,7 @@ public class ExampleInstrumentedTest {
         Cursor cursor = database.rawQuery("SELECT id,parent_id,operation_name,is_super_child FROM operation  WHERE id='" + id + "' and parent_id!='null'", null);
         int a = cursor.getCount();
 
-        if (a == 0 || cursor.getString(3).equalsIgnoreCase("on") ) {
+        if (a == 0 || cursor.getString(3).equalsIgnoreCase("on")) {
             return cursorhold;
         }
         cursor.moveToNext();

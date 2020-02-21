@@ -3,7 +3,7 @@ package com.apogee.fleetsurvey.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +28,7 @@ public class ProjectFragment extends Fragment {
 
     };
     int[] imageId = {R.drawable.image_project1, R.drawable.image_crs2, R.drawable.image_import3, R.drawable.image_export4, R.drawable.image_reports5, R.drawable.image_basemap6,
-            R.drawable.image_points7, R.drawable.image_lines8, R.drawable.image_features9, R.drawable.image_cloud10, R.drawable.image_codelist11
+            R.drawable.image_points7, R.drawable.image_lines8, R.drawable.image_features9, R.drawable.image_features9, R.drawable.image_codelist11
 
 
     };

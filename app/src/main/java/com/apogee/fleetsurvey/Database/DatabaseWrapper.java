@@ -394,6 +394,9 @@ public class DatabaseWrapper extends SQLiteOpenHelper {
             + " remark TEXT DEFAULT NULL"
             + ");";
 
+
+
+
     public DatabaseWrapper(Context context) {
         super(context, DATABASE_NAME, CURSOR_FACTORY, DATABASE_VERSION);
         this.context = context;

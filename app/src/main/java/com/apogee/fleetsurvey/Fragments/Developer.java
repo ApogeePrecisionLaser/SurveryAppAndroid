@@ -4,9 +4,9 @@ package com.apogee.fleetsurvey.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBar;
+import androidx.cardview.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +16,21 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.apogee.fleetsurvey.Connect;
 import com.apogee.fleetsurvey.Database.DatabaseOperation;
 import com.apogee.fleetsurvey.R;
+import com.apogee.fleetsurvey.model.Operation;
 import com.apogee.fleetsurvey.utility.DeviceScanActivity;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-/**
+/**DeviceControlActivity
  * A simple {@link Fragment} subclass.
  */
 public class Developer extends Fragment {
@@ -44,7 +51,7 @@ public class Developer extends Fragment {
     ArrayList<String> dgmaufactrurList, dgmodelList;
     int manufactrur_id, model_id, model_ytpe_id,dgpsmodel_id;
     TextView maufactrurtxt,model_typetxt,modeltxt,dgmaufactrurtxt,dgmodel_typetxt,dgmodeltxt,bledevicedetail,dgpsdevicedetail;
-    String mode_type, device;
+    String mode_type, device,device_dgps;
     Button connectBtn1;
     ArrayAdapter<String> modelAdapter,dgmodelAdapter;
     String devicetypeval;
@@ -309,10 +316,10 @@ public class Developer extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    device = parent.getItemAtPosition(position).toString();
+                    device_dgps = parent.getItemAtPosition(position).toString();
                     if (!device.equals("--select--")) {
                         dbTask.open();
-                        dgpsmodel_id = dbTask.getmodel_id(device);
+                        dgpsmodel_id = dbTask.getmodel_id(device_dgps);
                         connectBtn1.setVisibility(View.VISIBLE);
                     }
                 } catch (Exception e) {
@@ -339,6 +346,37 @@ public class Developer extends Fragment {
                 intent.putExtra("device_address", device_address);
                 intent.putExtra("device_id", ""+device_id);
                 intent.putExtra("dgps_device_id", dgps_device_id);
+
+
+
+                Operation operation = new Operation();
+                operation.setDeviceid(model_type_id);
+                operation.setDevicename(device_name);
+                operation.setBleid(Integer.parseInt(device_id));
+                operation.setBlename(device);
+                operation.setDgpsid(Integer.parseInt(dgps_device_id));
+                operation.setDgpsname(device_dgps);
+                operation.setDevice_address(device_address);
+                List<Operation> savedevicelist = new ArrayList<>();
+                Gson gson = new Gson();
+                if (((Connect) getActivity()).sharedPreferences.getString("SAVEDLIST", null) != null) {
+
+                    String json = ((Connect) getActivity()).sharedPreferences.getString("SAVEDLIST", null);
+
+
+
+                    Type type = new TypeToken<List<Operation>>(){}.getType();
+                    List<Operation> operationList = gson.fromJson(json, type);
+                    savedevicelist.addAll(operationList);
+                }
+
+                savedevicelist.add(operation);
+                Set<Operation> stringSet = new HashSet<Operation>();
+                stringSet.addAll(savedevicelist);
+
+                String json = gson.toJson(savedevicelist);
+                ((Connect) getActivity()).editor.putString("SAVEDLIST", json);
+                ((Connect) getActivity()).editor.apply();
                 startActivity(intent);
             }
         });

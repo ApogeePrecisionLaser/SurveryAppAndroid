@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.apogee.fleetsurvey">
 
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
+
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
@@ -21,7 +23,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -35,28 +36,36 @@
         android:resizeable="true" />
 
     <application
-        android:name="com.apogee.fleetsurvey.utility.MyInternetConnection"
+        android:name=".utility.MyInternetConnection"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/fleet"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:node="replace">
-        <activity android:name="com.apogee.fleetsurvey.CRS_sattelite"></activity>
-        <activity android:name="com.apogee.fleetsurvey.HomeActivity"></activity>
-        <activity android:name="com.apogee.fleetsurvey.stakepoint" />
-        <activity android:name="com.apogee.fleetsurvey.Generic.taskGeneric" />
-        <activity android:name="com.apogee.fleetsurvey.Generic.GenericActivity" />
-        <activity android:name="com.apogee.fleetsurvey.utility.Communicationmethod" />
-        <activity android:name="com.apogee.fleetsurvey.SetupActivity" /> <!-- <activity android:name=".Data."></activity> -->
+
+
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:clearTaskOnLaunch="true"
+            android:screenOrientation="sensorLandscape"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".CRS_sattelite" />
+        <activity android:name=".HomeActivity" />
+        <activity android:name=".stakepoint" />
+        <activity android:name=".Generic.taskGeneric" />
+        <activity android:name=".Generic.GenericActivity" />
+        <activity android:name=".utility.Communicationmethod" />
+        <activity android:name=".SetupActivity" /> <!-- <activity android:name=".Data."></activity> -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -65,17 +74,16 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name="com.apogee.fleetsurvey.Connect" >
+        <activity android:name=".scanmodule.ScanActivity"></activity>
+        <activity android:name=".Connect">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.apogee.fleetsurvey.newproject" />
-        <activity
-            android:name="com.apogee.fleetsurvey.Data.SplashActivity"
-   >
+        <activity android:name=".newproject" />
+        <activity android:name=".Data.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -84,20 +92,17 @@
         </activity>
 
         <service
-            android:name="com.apogee.fleetsurvey.utility.BluetoothLeService"
+            android:name=".utility.BluetoothLeService"
             android:enabled="true" />
         <service
-            android:name="com.apogee.fleetsurvey.utility.BLEService"
+            android:name=".utility.BLEService"
             android:exported="false" />
 
         <activity
-            android:name="com.apogee.fleetsurvey.utility.DeviceControlActivity"
+            android:name=".utility.DeviceControlActivity"
             android:label="@string/title_activity_device_control"
-            android:theme="@style/AppTheme.NoActionBar" >
-
-
-        </activity>
-        <activity android:name="com.apogee.fleetsurvey.utility.DeviceScanActivity" />
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".utility.DeviceScanActivity" />
     </application>
 
 </manifest>

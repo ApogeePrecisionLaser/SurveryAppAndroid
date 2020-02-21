@@ -10,7 +10,7 @@
 
 
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -22,7 +22,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"></ImageButton>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:id="@+id/lay1"
@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,9 +94,9 @@
                 android:onClick="imgbtn"
                 android:src="@drawable/ic_camera_black_24dp">
 
-            </android.support.design.widget.FloatingActionButton>
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,9 +106,9 @@
                 app:maxImageSize="40dp"
                 android:src="@drawable/ic_mic_black_24dp">
 
-            </android.support.design.widget.FloatingActionButton>
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/newdata"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
                 app:maxImageSize="40dp"
                 android:src="@drawable/ic_add_circle_outline_black_24dp">
 
-            </android.support.design.widget.FloatingActionButton>
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
         </LinearLayout>
 

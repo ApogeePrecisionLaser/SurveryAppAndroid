@@ -1375,7 +1375,7 @@ public class DatabaseOperation {
     public ArrayList<String> delaylist(String joined1, int id, int Device_id) {
         ArrayList<String> list = new ArrayList<>();
         try {
-            Cursor cursor = database.rawQuery("SELECT delay FROM device_command_map where command_id IN (" + joined1 + ") AND operation_id = " + id + " and device_id = " + Device_id + " ; ", null);
+            Cursor cursor = database.rawQuery("SELECT delay FROM device_command_map where command_id IN (" + joined1 + ") AND operation_id = " + id + " and device_id = " + Device_id + " ORDER BY order_no ASC ; ", null);
             for (int i = 0; i < cursor.getCount(); i++) {
                 cursor.moveToPosition(i);
                 list.add(cursor.getString(0));
@@ -1403,10 +1403,11 @@ public class DatabaseOperation {
     }
 
 
-    public List<String> commandforparsinglist(String joined1) {
+    public List<String> commandforparsinglist(int Device_id, int operationid) {
         List<String> list = new ArrayList<>();
         try {
-            Cursor cursor = database.rawQuery("SELECT distinct command FROM command where command_id IN (" + joined1 + ") ; ", null);
+           // Cursor cursor = database.rawQuery("SELECT distinct command FROM command where command_id IN (" + joined1 + ") ; ", null);
+            Cursor cursor = database.rawQuery("SELECT c.command FROM device_command_map as map , command as c WHERE map.device_id= "+Device_id+" AND map.operation_id="+operationid+" and map.command_id = c.command_id ORDER By order_no;", null);
             for (int i = 0; i < cursor.getCount(); i++) {
                 cursor.moveToPosition(i);
                 //  list.add(cursor.getString(0).replaceAll("/",""));
@@ -1491,6 +1492,23 @@ public class DatabaseOperation {
         return list;
     }
 
+    public String retrnfromtfromrmrk(String paramatername){
+
+       String rtrnfrmrmk=null;
+        try {
+            Cursor cursor = database.rawQuery("SELECT remark FROM parameter Where parameter_name='" + paramatername +"'", null);
+
+
+            for (int i = 0; i < cursor.getCount(); i++) {
+                cursor.moveToPosition(i);
+                rtrnfrmrmk=cursor.getString(0);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "getUserDtailerror: " + e);
+        }
+        return rtrnfrmrmk;
+
+    }
     public Map<String, Map<String, String>> displayvaluelist(String joined) {
         Map<String, Map<String, String>> selectionMap = new HashMap<>();
         Map<String, String> selectionValueMap = new HashMap<>();
@@ -1982,13 +2000,10 @@ public class DatabaseOperation {
 
         for (int l = 0; l < namesList.size(); l++) {
             try {
-                // Cursor cursor = database.rawQuery("SELECT operation_name FROM operation", null);
-                //  Cursor cursor = database.rawQuery("SELECT operation_name FROM operation", null);
 
                 Operation operation = namesList.get(l);
 
                 Cursor cursor = null;
-                // Cursor cursor = database.rawQuery("SELECT * FROM operation  WHERE id=" + operation.getId() + " and parent_id!=1", null);
                 if (operation.getId() > 0) {
                     cursor = isParent(operation.getId());
                     int a = cursor.getCount();
@@ -1998,12 +2013,7 @@ public class DatabaseOperation {
                         cursor.moveToPosition(i);
 
                         listparent.add(new Operation(cursor.getInt(0), cursor.getString(2), cursor.getString(3)));
-//                if (!list.contains(cursor.getString(cursor.getColumnIndex("operation_name")))) {
-//
-//
-//                    list.add(cursor.getString(0));
-//                }
-//                 list.add(surveyBean);
+
                     }
 
                 }
@@ -2015,33 +2025,6 @@ public class DatabaseOperation {
 
         ArrayList<Operation> namesListparent = new ArrayList<>(listparent);
         namesListparent.add(0, new Operation(-15, "--select--", null));
-
-
-//        for (int postion = 0; postion < namesListparent.size(); postion++) {
-//
-//            Operation operation = namesListparent.get(postion);
-//
-//            if (operation.getId() > 0) {
-//                Cursor cursor = isChild(operation.getId());
-//                setchild.clear();
-//                for (int i = 0; i < cursor.getCount(); i++) {
-//                    cursor.moveToPosition(i);
-//
-//
-//                    setchild.add(new Operation(cursor.getInt(0), cursor.getString(1), cursor.getString(2)));
-////                if (!list.contains(cursor.getString(cursor.getColumnIndex("operation_name")))) {
-////
-////
-////                    list.add(cursor.getString(0));
-////                }
-////                 list.add(surveyBean);
-//                }
-//            }
-//
-//
-//            ArrayList<Operation> listchild = new ArrayList<>(setchild);
-//            listchild.add(0, new Operation(-15, "--select--", null));
-//        }
 
         return namesListparent;
     }

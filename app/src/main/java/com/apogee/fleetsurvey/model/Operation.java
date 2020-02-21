@@ -1,7 +1,7 @@
 package com.apogee.fleetsurvey.model;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class Operation {
 
@@ -13,6 +13,10 @@ public class Operation {
         this.id = id;
         this.name = name;
         this.issupechild = issupechild;
+    }
+
+
+    public Operation() {
     }
 
     public int getId() {
@@ -30,14 +34,21 @@ public class Operation {
 
     @Override
     public int hashCode() {
+        if(name!=null)
         return name.hashCode();
+        return super.hashCode();
     }
 
     @Override
     public boolean equals(@Nullable Object obj) {
         Operation operation = (Operation) obj;
-        if (this.name.equals(operation.name)) {
-            return true;
+
+        if(name!=null)
+        {
+            if (this.name.equals(operation.name)) {
+                return true;
+            }
+
         }
 
         return false;
@@ -47,5 +58,70 @@ public class Operation {
     @Override
     public String toString() {
         return name;
+    }
+
+
+    String devicename;
+    int deviceid;
+    String blename;
+    int bleid;
+    String dgpsname;
+    int dgpsid;
+    String device_address;
+
+    public String getDevice_address() {
+        return device_address;
+    }
+
+    public void setDevice_address(String device_address) {
+        this.device_address = device_address;
+    }
+
+    public String getDevicename() {
+        return devicename;
+    }
+
+    public void setDevicename(String devicename) {
+        this.devicename = devicename;
+    }
+
+    public int getDeviceid() {
+        return deviceid;
+    }
+
+    public void setDeviceid(int deviceid) {
+        this.deviceid = deviceid;
+    }
+
+    public String getBlename() {
+        return blename;
+    }
+
+    public void setBlename(String blename) {
+        this.blename = blename;
+    }
+
+    public int getBleid() {
+        return bleid;
+    }
+
+    public void setBleid(int bleid) {
+        this.bleid = bleid;
+    }
+
+    public String getDgpsname() {
+        return dgpsname;
+    }
+
+    public void setDgpsname(String dgpsname) {
+        this.dgpsname = dgpsname;
+    }
+
+    public int getDgpsid() {
+        return dgpsid;
+    }
+
+    public void setDgpsid(int dgpsid) {
+        this.dgpsid = dgpsid;
     }
 }

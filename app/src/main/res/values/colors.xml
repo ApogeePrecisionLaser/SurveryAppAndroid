@@ -10,6 +10,7 @@
      <color name="coloret">#FF9691</color>
      <color name="textColorPrimary">#000000</color>
      <color name="white">#ffffff</color>
+
      <color name="btn_logut_bg">#ff6861</color>
      <color name="colorblue">#C13F51B5</color>
      <color name="coloryellow">#D7DBC626</color>
@@ -19,5 +20,6 @@
     <color name="tab_enable">#FFFFFF</color>
     <color name="tab_checked">#F3CD70</color>
     <color name="tab_unchecked">#FFFFFF</color>
+    <color name="dialog_color">#02423C33</color>
 
   </resources>

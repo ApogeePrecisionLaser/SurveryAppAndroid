@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#00555555">
+    android:layout_height="match_parent">
 
 
-        <ListView
-            android:id="@+id/dialog_listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/_20sdp"
-            android:background="@android:color/white"/>
+    <ListView
+        android:id="@+id/dialog_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@android:color/holo_red_dark"
+        android:dividerHeight="@dimen/_2sdp"
+        android:layout_margin="@dimen/_25sdp"
+        android:padding="@dimen/_10sdp"
+        android:background="@drawable/drawable_dialog" />
 
-        <ImageView
-            android:id="@+id/iv_cancel"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/error" />
-
-
-
-
-
+    <ImageView
+        android:id="@+id/iv_cancel"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/_23sdp"
+        android:src="@drawable/close" />
 
 </RelativeLayout>

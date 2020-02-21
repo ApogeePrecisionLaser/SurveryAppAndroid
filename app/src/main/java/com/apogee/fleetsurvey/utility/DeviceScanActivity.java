@@ -12,9 +12,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -195,7 +195,8 @@ public class DeviceScanActivity extends AppCompatActivity {
             String address = info.substring(info.length() - 17);
             BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
             final Intent intent = new Intent(DeviceScanActivity.this, DeviceControlActivity.class);
-            intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
+            intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName()
+            );
             intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
             intent.putExtra("device_id",device_id);
             intent.putExtra("dgps_device_id",dgps_device_id);

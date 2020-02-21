@@ -1,18 +1,28 @@
 package com.apogee.fleetsurvey.utility;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 
 public class MyInternetConnection extends Application {
     private static MyInternetConnection mInstance;
-//    public  SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("SurveyApp", 0);
+    //    public  SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("SurveyApp", 0);
 //    private SharedPreferences.Editor editor;
 //    public static String KEY="locationdata";
+
+    public static final String FILTER_ACTION_KEY = MyInternetConnection.class.getSimpleName()+"localreciever";
+    public static final String BROADCASTMESSAGE = "";
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-//        editor = sharedPreferences.edit();
+
     }
 
     public static synchronized MyInternetConnection getInstance() {
@@ -20,16 +30,13 @@ public class MyInternetConnection extends Application {
     }
 
 
-//    public void setString(String value) {
-//        editor.putString(KEY,value);
-//        editor.commit();
-//    }
-//
-//
-//    public String getString(){
-//       return sharedPreferences.getString(KEY,"");
-//    }
-    public void setConnectivityListener(ConnectivityReciever.ConnectivityReceiverListener listener) {
-        ConnectivityReciever.connectivityReceiverListener = listener;
+
+    @Override
+    public void unregisterReceiver(BroadcastReceiver receiver) {
+        super.unregisterReceiver(receiver);
+
     }
+
+
+
 }

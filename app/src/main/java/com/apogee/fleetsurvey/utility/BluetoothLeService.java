@@ -268,6 +268,7 @@ public class BluetoothLeService extends Service {
 //                    } else {
 //
 //
+//
 //                   }
     }
 
@@ -407,7 +408,8 @@ public class BluetoothLeService extends Service {
         }
         finalCommandList.remove(indexval+1);
         delayList.remove(indexval+1);*/
-        writeDataToCharacteristic(con, bluetoothGattCharacteristic, resendStatus, is_new, newCommandList, newRadioCommandlist, delayList);
+        writeDataToCharacteristic(con, bluetoothGattCharacteristic, resendStatus, is_new, newCommandList,
+                newRadioCommandlist, delayList);
 
     }
 
@@ -624,36 +626,9 @@ public class BluetoothLeService extends Service {
             }
 
 
-            class MyHandler implements Runnable {
-                Context con;
-                boolean resendStatus;
-                boolean isnewtask;
-                List<String> newCommandList;
-                List<String> newRadioCommandlist;
-                List<String> delayList;
-
-                public MyHandler(Context con, boolean resendStatus, boolean isnewtask,
-                                 List<String> newCommandList, List<String> newRadioCommandlist, List<String> delayList) {
-                    this.con = con;
-                    this.resendStatus = resendStatus;
-                    this.isnewtask = isnewtask;
-                    this.newCommandList = newCommandList;
-                    this.newRadioCommandlist = newRadioCommandlist;
-                    this.delayList = delayList;
-                }
 
 
 
-                @Override
-                public void run() {
-                    writeDataToCharacteristic(con, bluetoothGattCharacteristic, resendStatus, isnewtask,
-                            newCommandList, newRadioCommandlist, delayList);
-
-                }
-            }
-
-            new Handler().postDelayed(new MyHandler(con,resendStatus,isnewtask,
-                    newCommandList,newRadioCommandlist,delayList), 5000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1215,6 +1190,9 @@ public class BluetoothLeService extends Service {
         void showDailog(Context context);
 
         void hideDialog(Context context);
+
+        void onResendCommand(Context con, boolean resendStatus, boolean isnewtask,
+                             List<String> newCommandList, List<String> newRadioCommandlist, List<String> delayList);
     }
 
 }

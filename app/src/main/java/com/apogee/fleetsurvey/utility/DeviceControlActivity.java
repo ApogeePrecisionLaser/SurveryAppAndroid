@@ -16,11 +16,14 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -117,7 +120,7 @@ public class DeviceControlActivity extends AppCompatActivity implements Bluetoot
     String Radiochanneltxt = null;
     //    String accuracyvalue=null;
 //    String surveytimevalue=null;
-    public List<String> newCommandList = new ArrayList<>();
+    public List<String> newCommandList = new ArrayList<String>();
     public List<String> finalCommandList = new ArrayList<>();
     public List<String> newRadioCommandList = new ArrayList<>();
 
@@ -225,6 +228,7 @@ public class DeviceControlActivity extends AppCompatActivity implements Bluetoot
     RecycerlViewAdapter recycerlViewAdapter;
     RecyclerView recylcerview;
     List<ItemType> itemTypeList = new ArrayList<>();
+    Callingserver1 callingserver1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,7 +248,6 @@ public class DeviceControlActivity extends AppCompatActivity implements Bluetoot
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mode = (Spinner) findViewById(R.id.type);
 
-
         Baudratespnr = (Spinner) findViewById(R.id.baudratespnr);
         config = (Spinner) findViewById(R.id.config);
         suboperation = (Spinner) findViewById(R.id.suboprtnspnr);
@@ -260,7 +263,7 @@ public class DeviceControlActivity extends AppCompatActivity implements Bluetoot
         dbTask = new DatabaseOperation(DeviceControlActivity.this);
         // mDataField = (TextView) findViewById(R.id.data_value);
         listAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1);
+                R.layout.list_textview);
         deviceList = new ArrayList<>();
         deviceListView.setAdapter(listAdapter);
         deviceListView.setOnItemClickListener(mDeviceClickListener);
@@ -416,7 +419,7 @@ public class DeviceControlActivity extends AppCompatActivity implements Bluetoot
     /*ALERTDIALOG VIEW FOR RADIO CONNECTIVITY */
 
     public void Radiobasedialog() {
-        final android.support.v7.app.AlertDialog dialogBuilder = new android.support.v7.app.AlertDialog.Builder(this).create();
+        final androidx.appcompat.app.AlertDialog dialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).create();
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialogradiobase, null);
         dialogBuilder.setTitle("Radio Base");
@@ -519,19 +522,22 @@ public class DeviceControlActivity extends AppCompatActivity implements Bluetoot
 
         View current = getCurrentFocus();
         if (current != null) current.clearFocus();
-        Callingserver1 cs = new Callingserver1(SENDALL);
-        cs.execute();
+        callingserver1 = new Callingserver1(SENDALL);
+        callingserver1.execute();
 
-        //      mBluetoothLeService.setOnShowDialogListner(this);
+//        mBluetoothLeService.setOnShowDialogListner(this);
 
 
     }
 
 
-    public void previewsubmission(View view) {
+    public void previewsubmission(View view) throws InterruptedException {
+        View current = getCurrentFocus();
+        if (current != null) current.clearFocus();
         newCommandList.clear();
-        Callingserver1 callingserver1 = new Callingserver1(SENDONEBYDIALOG);
+        callingserver1 = new Callingserver1(SENDONEBYDIALOG);
         callingserver1.execute();
+
     }
 
 
@@ -592,19 +598,19 @@ public class DeviceControlActivity extends AppCompatActivity implements Bluetoot
         if (iscontain) {
 
 
-            String value = "";
-            Set<String> bytevalue = map1.keySet();
-            for (String param : bytevalue) {
-                String disval = map1.get(param);
-                value = selectionValue2.get(disval);
-                if (value == null) {
-                    int value1 = Integer.parseInt(disval);
-                    value = bytesToHex(intToLittleEndian1(value1)).toUpperCase();
-                }
-                System.out.println(value);
-                map.put(param, value);
-
-            }
+//            String value = "";
+//            Set<String> bytevalue = map1.keySet();
+//            for (String param : bytevalue) {
+//                String disval = map1.get(param);
+//                value = selectionValue2.get(disval);
+//                if (value == null) {
+//                    int value1 = Integer.parseInt(disval);
+//                    value = bytesToHex(intToLittleEndian1(value1)).toUpperCase();
+//                }
+//                System.out.println(value);
+//                map.put(param, value);
+//
+//            }
             editCommand(commandsfromlist, sentype);
         } else {
             newCommandList.addAll(commandsfromlist);
@@ -799,13 +805,13 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
     public void getcommandforparsing() {
         String joined = TextUtils.join(", ", commandls1);
         commandidlist = new ArrayList<>();
-        commandsfromlist = new ArrayList<>();
+        commandsfromlist = new ArrayList<String>();
         delaylist = new ArrayList<>();
         dbTask.open();
 //        commandidlist = dbTask.commandididlist(joined);
 //        String joined1 = TextUtils.join(", ", commandidlist);
         delaylist = dbTask.delaylist(joined, opid, dgps_id);
-        commandsfromlist = dbTask.commandforparsinglist(joined);
+        commandsfromlist = dbTask.commandforparsinglist(dgps_id,opid);
 
 
     }
@@ -880,26 +886,57 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
 
             for (int j = 0; j < splitstr.length; j++) {
 
-                if (map.containsKey(splitstr[j])) {
-                    splitstr[j] = map.get(splitstr[j]);
+                if (map1.containsKey(splitstr[j])) {
+                    splitstr[j] = map1.get(splitstr[j]);
 
                 }
 
                 final_command = final_command.concat(splitstr[j]).replaceAll("\\s+", "");
 
-                if (final_command.contains("CRC")) {
+                 if (final_command.contains("CRC")) {
                     if (MODBUSCRC16.modbuscrcclassname.equals(crctypename)) {
                         final_command = final_command.replace("CRC", new MODBUSCRC16().returnCRCHexstring((final_command.substring(0, final_command.indexOf("CRC")))));
 
                     } else if (FLETCHERALGORITHM.fletcheralgoname.contains(crctypename)) {
-                        final_command = final_command.replace("CRC", new MODBUSCRC16().returnCRCHexstring((final_command.substring(0, final_command.indexOf("CRC")))));
+                        final_command = final_command.replace("CRC", new FLETCHERALGORITHM().checksum((final_command.substring(4, final_command.indexOf("CRC")))));
+
+                    } else {
+                        final_command = final_command.replace("CRC", new FLETCHERALGORITHM().checksum((final_command.substring(4, final_command.indexOf("CRC")))));
 
                     }
 
 
+//                    else if (FLETCHERALGORITHM.fletcheralgoname.contains(crctypename)) {
+//                        final_command = final_command.replace("CRC", new FLETCHERALGORITHM().checksum((final_command.substring(0, final_command.indexOf("CRC")))));
+//
+//                    }
                 }
             }
-            newCommandList.add(final_command);
+            newCommandList.add(final_command.concat("0D0A"));
+
+
+//            StringBuilder stringBuilder = new StringBuilder();
+//            stringBuilder.append("param with values:\n\n");
+//
+//
+//            for (Map.Entry m : map1.entrySet()) {
+//                stringBuilder.append(m.getKey() + " = " + m.getValue()+"\n");
+//            }
+//            stringBuilder.append("\n\ncommands here\n\n");
+//            for(String cmd:newCommandList){
+//                stringBuilder.append(cmd+"\n\n\n");
+//            }
+//            stringBuilder.append("\n\nAll folks");
+//
+//            Intent email = new Intent(Intent.ACTION_SEND);
+//            email.putExtra(Intent.EXTRA_EMAIL, new String[]{"shwetajpss@gmail.com"});
+//            email.putExtra(Intent.EXTRA_SUBJECT, "Command to check");
+//            email.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+//
+////need this to prompts email client only
+//            email.setType("message/rfc822");
+//
+//            startActivity(Intent.createChooser(email, "Choose an Email client :"));
             if (sendtype == 1)
 
                 mBluetoothLeService.send(item, DeviceControlActivity.this, false, false, newCommandList, newRadioCommandList, delaylist);
@@ -913,7 +950,7 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
     String communicationtype;
 
     public void timedialog() {
-        final android.support.v7.app.AlertDialog dialogBuilder = new android.support.v7.app.AlertDialog.Builder(this).create();
+        final androidx.appcompat.app.AlertDialog dialogBuilder = new androidx.appcompat.app.AlertDialog.Builder(this).create();
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialogtime, null);
         dialogBuilder.setTitle("4G Configuration");
@@ -1057,14 +1094,6 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
             String returnname = finalvalue;
             map1.put(titl, finalvalue);
 
-
-//            for (int i = 0; i < commandsfromlist.size(); i++) {
-//                String command = commandsfromlist.get(i).replaceAll(titl, finalvalue);
-//
-//                commandsfromlist.set(i, command);
-//            }
-//
-//          List<String> arrayList =  commandsfromlist;
         }
 
     }
@@ -1072,8 +1101,8 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
     public static int SENDALL = 1;
     public static int SENDONEBYDIALOG = 2;
 
-    private class Callingserver1 extends AsyncTask<String, String, Integer> {
-        ProgressDialog dialog;
+    public class Callingserver1 extends AsyncTask<String, String, Integer> {
+        // ProgressDialog dialog;
 
         int sendtype;
 
@@ -1109,28 +1138,32 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
         @Override
         protected void onPostExecute(Integer result) {
 // execution of result of Long time consuming operation
+            // dialog.dismiss();
             if (result.equals("success")) {
-                dialog.dismiss();
+                //  dialog.dismiss();
 
 
             } else {
-                dialog.dismiss();
+                //
 
             }
 
             if (result == 2) {
                 setCommandidialog();
             }
+
+            cancel(true);
+            callingserver1 = null;
         }
 
         @Override
         protected void onPreExecute() {
-            dialog = ProgressDialog.show(DeviceControlActivity.this, "Command Execution..", "Proccessing....Please wait");
-            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            dialog.setProgress(0);
-            dialog.setMax(100);
-            dialog.show();
-            dialog.show();
+//            dialog = ProgressDialog.show(DeviceControlActivity.this, "Command Execution..", "Proccessing....Please wait");
+//            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            dialog.setProgress(0);
+//            dialog.setMax(100);
+//            dialog.show();
+
 // Things to be done before execution of long running operation. For
 // example showing ProgessDialog
         }
@@ -1370,6 +1403,18 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
 
             listAdapter.add(data);
             deviceList.add(data);
+
+
+            int milliesec = (((EditText) findViewById(R.id.ed_inputnum)).getText().toString().isEmpty()) ? 5000 :
+                    Integer.parseInt(((EditText) findViewById(R.id.ed_inputnum)).getText().toString() + "000");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (callingserver1 != null)
+                        callingserver1.execute();
+
+                }
+            }, milliesec);
         }
 
     }
@@ -1396,6 +1441,17 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
         proDialog = new ProgressDialog(context);
         proDialog.dismiss();
     }
+
+
+    @Override
+    public void onResendCommand(Context con, boolean resendStatus, boolean isnewtask,
+                                List<String> newCommandList, List<String> newRadioCommandlist, List<String> delayList) {
+
+        //  new Handler().postDelayed(, Integer.parseInt(((EditText)findViewById(R.id.ed_inputnum)).getText().toString()));
+
+
+    }
+
 
     private class Callingserver extends AsyncTask<String, String, Long> {
         ProgressDialog dialog;
