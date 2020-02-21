@@ -1,7 +1,7 @@
 package com.apogee.fleetsurvey.utility;
 
 public class FLETCHERALGORITHM {
-    public static String fletcheralgoname=FLETCHERALGORITHM.class.getSimpleName();
+    public static String fletcheralgoname="FLETCHER'S ALGORITHM";
 
     public String checksum(String command) {
         String[] commandPair = new String[(command.length() / 2) + 1];

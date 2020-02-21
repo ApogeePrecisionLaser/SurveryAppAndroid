@@ -110,7 +110,7 @@ public class User extends Fragment {
                     mnAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     modelname.setAdapter(mnAdapter);
                 } else {
-                    Toast.makeText(context, "Wrong Selection", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Wrong Selection", Toast.LENGTH_SHORT).show();
                 }
 
             }

@@ -381,10 +381,10 @@ public class DatabaseWrapper extends SQLiteOpenHelper {
 
 
     private static final String crccommandmappingquery = " CREATE TABLE command_crc_mapping ("
-            + " command_id INTEGER  NOT NULL DEFAULT 'Y',"
-            + " crc_type_id INTEGER PRIMARY KEY DEFAULT NULL,"
-            + " command_crc_mapping_id INTEGER DEFAULT NULL,"
-            + " remark TEXT DEFAULT NULL"
+            + "command_id INTEGER  NOT NULL DEFAULT 'Y',"
+            + "crc_type_id INTEGER  DEFAULT NULL,"
+            + "command_crc_mapping_id INTEGER DEFAULT NULL,"
+            + "remark TEXT DEFAULT NULL"
             + ");";
 
 

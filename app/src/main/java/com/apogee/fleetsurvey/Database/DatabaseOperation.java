@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DatabaseOperation {
     private static final String TAG = "DatabaseOperation.java";
@@ -697,14 +698,15 @@ public class DatabaseOperation {
         try {
             Iterator<BleBean> iterator = list.iterator();
             database.beginTransaction();
-            while (iterator.hasNext() && result != -1) {
+            database.delete("command_crc_mapping",null,null);
+            while (iterator.hasNext()) {
                 ContentValues values = new ContentValues();
                 BleBean bleBean = iterator.next();
                 values.put("command_id", bleBean.getCommand_id());
                 values.put("crc_type_id", bleBean.getCrc_type_id());
                 values.put("command_crc_mapping_id", bleBean.getCommand_crc_mapping_id());
                 values.put("remark", bleBean.getRemark());
-                result = database.replace("command_crc_mapping", null, values);
+                result = database.insert("command_crc_mapping", null, values);
             }
             if (result > 0) {
                 database.setTransactionSuccessful();
@@ -1403,21 +1405,23 @@ public class DatabaseOperation {
     }
 
 
-    public List<String> commandforparsinglist(int Device_id, int operationid) {
+    public ConcurrentHashMap<String,String> commandforparsinglist(int Device_id, int operationid) {
         List<String> list = new ArrayList<>();
+        ConcurrentHashMap<String,String> hashmaplocal = new ConcurrentHashMap<>();
         try {
            // Cursor cursor = database.rawQuery("SELECT distinct command FROM command where command_id IN (" + joined1 + ") ; ", null);
-            Cursor cursor = database.rawQuery("SELECT c.command FROM device_command_map as map , command as c WHERE map.device_id= "+Device_id+" AND map.operation_id="+operationid+" and map.command_id = c.command_id ORDER By order_no;", null);
+            Cursor cursor = database.rawQuery("SELECT c.remark,c.command FROM device_command_map as map , command as c WHERE map.device_id= "+Device_id+" AND map.operation_id="+operationid+" and map.command_id = c.command_id ORDER By order_no;", null);
             for (int i = 0; i < cursor.getCount(); i++) {
                 cursor.moveToPosition(i);
                 //  list.add(cursor.getString(0).replaceAll("/",""));
-                list.add(cursor.getString(0));
+                hashmaplocal.put(cursor.getString(0),cursor.getString(1));
+                //list.add(cursor.getString(0));
                 // list.add(surveyBean);
             }
         } catch (Exception e) {
             Log.e(TAG, "getUserDtailerror: " + e);
         }
-        return list;
+        return hashmaplocal;
     }
 
     public List<Integer> commandls(int id) {
@@ -1953,7 +1957,7 @@ public class DatabaseOperation {
 
 
     public String returnCRCType(String command) {
-        Cursor cursor = database.rawQuery("SELECT ct.crc_type_name FROM command_crc_mapping as map , crc_type as ct , command AS cd where cd.command='" + command + "' AND map.command_id = cd.command_id and map.crc_type_id = ct.crc_type_id"
+            Cursor cursor = database.rawQuery("SELECT ct.crc_type_name FROM command_crc_mapping as map , crc_type as ct , command AS cd where cd.command='" + command + "' AND map.command_id = cd.command_id and map.crc_type_id = ct.crc_type_id"
                 , null);
 
         int a = cursor.getCount();
@@ -1967,6 +1971,21 @@ public class DatabaseOperation {
         return str;
     }
 
+
+    public String getCmdshrtname(String command){
+        Cursor cursor = database.rawQuery("SELECT remark FROM command where command='" + command + "'"
+                , null);
+
+        int a = cursor.getCount();
+        String str = "";
+        for (int i = 0; i < cursor.getCount(); i++) {
+            cursor.moveToPosition(i);
+            str = cursor.getString(cursor.getColumnIndex("remark"));
+            // list.add(surveyBean);
+        }
+
+        return str;
+    }
 
     public ArrayList<Operation> getoperationParent(int deviceid) {
         HashSet<Operation> setchild = new HashSet<Operation>();

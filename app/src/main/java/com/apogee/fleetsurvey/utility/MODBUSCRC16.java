@@ -5,7 +5,7 @@ import java.util.zip.Checksum;
 public class MODBUSCRC16 implements Checksum {
 
 
-    public static String modbuscrcclassname = MODBUSCRC16.class.getSimpleName();
+    public static String modbuscrcclassname = "MODBUS CRC 16";
     private static final int[] TABLE = {
             0x0000, 0xc0c1, 0xc181, 0x0140, 0xc301, 0x03c0, 0x0280, 0xc241,
             0xc601, 0x06c0, 0x0780, 0xc741, 0x0500, 0xc5c1, 0xc481, 0x0440,

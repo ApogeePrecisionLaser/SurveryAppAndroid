@@ -21,6 +21,7 @@ import android.os.IBinder;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
@@ -37,6 +38,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DeviceControlActivity extends AppCompatActivity implements BluetoothLeService.OnShowDailogListener, OnItemValueListener {
     private final static String TAG = DeviceControlActivity.class.getSimpleName();
@@ -158,6 +161,8 @@ public class DeviceControlActivity extends AppCompatActivity implements Bluetoot
 
     /*BROADCAST RECIEVER USED FOR CONNECTION OF BLE */
 
+
+    ConcurrentHashMap<String, String> hashmapforremark = new ConcurrentHashMap<>();
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -811,7 +816,10 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
 //        commandidlist = dbTask.commandididlist(joined);
 //        String joined1 = TextUtils.join(", ", commandidlist);
         delaylist = dbTask.delaylist(joined, opid, dgps_id);
-        commandsfromlist = dbTask.commandforparsinglist(dgps_id,opid);
+
+        hashmapforremark = dbTask.commandforparsinglist(dgps_id, opid);
+        Collection<String> values = hashmapforremark.values();
+        commandsfromlist.addAll(values);
 
 
     }
@@ -879,7 +887,7 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
         int[] index = new int[3];
         for (String command : commandsfromlist) {
             String crctypename = dbTask.returnCRCType(command);
-            crctypename = crctypename.replaceAll("\\s", "");
+            //  crctypename = crctypename.replaceAll("\\s", "");
             String splitstr[] = command.split("/");
             String final_command = "";
 
@@ -893,17 +901,18 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
 
                 final_command = final_command.concat(splitstr[j]).replaceAll("\\s+", "");
 
-                 if (final_command.contains("CRC")) {
+                if (final_command.contains("CRC")) {
                     if (MODBUSCRC16.modbuscrcclassname.equals(crctypename)) {
                         final_command = final_command.replace("CRC", new MODBUSCRC16().returnCRCHexstring((final_command.substring(0, final_command.indexOf("CRC")))));
 
-                    } else if (FLETCHERALGORITHM.fletcheralgoname.contains(crctypename)) {
-                        final_command = final_command.replace("CRC", new FLETCHERALGORITHM().checksum((final_command.substring(4, final_command.indexOf("CRC")))));
-
-                    } else {
+                    } else if (FLETCHERALGORITHM.fletcheralgoname.equals(crctypename)) {
                         final_command = final_command.replace("CRC", new FLETCHERALGORITHM().checksum((final_command.substring(4, final_command.indexOf("CRC")))));
 
                     }
+//                    else {
+//                        final_command = final_command.replace("CRC", new FLETCHERALGORITHM().checksum((final_command.substring(4, final_command.indexOf("CRC")))));
+//
+//                    }
 
 
 //                    else if (FLETCHERALGORITHM.fletcheralgoname.contains(crctypename)) {
@@ -912,38 +921,43 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
 //                    }
                 }
             }
+
+
             newCommandList.add(final_command.concat("0D0A"));
 
+            for (Map.Entry entry : hashmapforremark.entrySet()) {
+                String key = (String) entry.getKey();
+                hashmapforremark.replace(key, command, final_command);
 
-//            StringBuilder stringBuilder = new StringBuilder();
-//            stringBuilder.append("param with values:\n\n");
-//
-//
-//            for (Map.Entry m : map1.entrySet()) {
-//                stringBuilder.append(m.getKey() + " = " + m.getValue()+"\n");
-//            }
-//            stringBuilder.append("\n\ncommands here\n\n");
-//            for(String cmd:newCommandList){
-//                stringBuilder.append(cmd+"\n\n\n");
-//            }
-//            stringBuilder.append("\n\nAll folks");
-//
-//            Intent email = new Intent(Intent.ACTION_SEND);
-//            email.putExtra(Intent.EXTRA_EMAIL, new String[]{"shwetajpss@gmail.com"});
-//            email.putExtra(Intent.EXTRA_SUBJECT, "Command to check");
-//            email.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
-//
-////need this to prompts email client only
-//            email.setType("message/rfc822");
-//
-//            startActivity(Intent.createChooser(email, "Choose an Email client :"));
+            }
             if (sendtype == 1)
 
                 mBluetoothLeService.send(item, DeviceControlActivity.this, false, false, newCommandList, newRadioCommandList, delaylist);
 
         }
 
-
+//        StringBuilder stringBuilder = new StringBuilder();
+//        stringBuilder.append("param with values:\n\n");
+//
+//
+//        for (Map.Entry m : map1.entrySet()) {
+//            stringBuilder.append(m.getKey() + " = " + m.getValue()+"\n");
+//        }
+//        stringBuilder.append("\n\ncommands here\n\n");
+//        for(String cmd:newCommandList){
+//            stringBuilder.append(cmd+"\n\n\n");
+//        }
+//        stringBuilder.append("\n\nAll folks");
+//
+//        Intent email = new Intent(Intent.ACTION_SEND);
+//        email.putExtra(Intent.EXTRA_EMAIL, new String[]{"shwetajpss@gmail.com"});
+//        email.putExtra(Intent.EXTRA_SUBJECT, "Command to check");
+//        email.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+//
+////need this to prompts email client only
+//        email.setType("message/rfc822");
+//
+//        startActivity(Intent.createChooser(email, "Choose an Email client :"));
     }
 
     String devicetype;
@@ -1194,7 +1208,14 @@ ON THE BASIS OF THESE WE GET SELECTION VALUE , PARAMETER NAME AND ADD THE VALUES
         final ListView listView = dialog.findViewById(R.id.dialog_listview);
         tempcomnd.clear();
 
-        tempcomnd.addAll(newCommandList);
+
+        for (Map.Entry entry : hashmapforremark.entrySet()) {
+            tempcomnd.add(entry.getKey() + " = " + entry.getValue());
+        }
+
+        //   tempcomnd.addAll(newCommandList);
+
+
         listView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, tempcomnd));
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
